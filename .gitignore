@@ -1,0 +1,63 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.log
+
+# ---- Virtual environments ----
+.venv/
+venv/
+env/
+ENV/
+*.envrc
+
+# ---- Dependency / build artifacts ----
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+*.whl
+
+# ---- IDE / editor ----
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---- OS files ----
+.DS_Store
+Thumbs.db
+
+# ---- Local environment/config ----
+.env
+.env.*
+!example.env  # keep a template checked in if you want
+
+# ---- SQLite DB (local dev) ----
+*.db
+*.sqlite3
+
+# ---- Coverage / testing ----
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# ---- MyPy / type checker ----
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ---- FastAPI / Uvicorn logs ----
+*.log
+*.pid
+
+# ---- Docker ----
+*.pid
+*.seed
+.dockerignore
+docker-compose.override.yml
