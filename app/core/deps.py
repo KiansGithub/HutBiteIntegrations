@@ -2,10 +2,23 @@ from fastapi import Depends, HTTPException, Request
 from .config import settings 
 
 def get_hubrise_conn(request: Request) -> dict: 
-    conn = request.session.get("hubrise_conn")
-    if not conn:
-        raise HTTPException(status_code=401, detail="Not connected to HubRise")
-    return conn 
+    # 1) Session (if present)
+    if request: 
+        sess = request.session.get("hubrise_conn")
+        if sess: 
+            return sess 
+        
+    # 2) Env fallback (token mode)
+    if settings.HUBRISE_ACCESS_TOKEN and settings.HUBRISE_LOCATION_ID: 
+        return {
+            "access_token": settings.HUBRISE_ACCESS_TOKEN, 
+            "account_id": settings.HUBRISE_ACCOUNT_ID, 
+            "location_id": settings.HUBRISE_LOCATION_ID, 
+            "catalog_id": settings.HUBRISE_CATALOG_ID, 
+        }
+    
+    # Neither session nor env configured 
+    raise HTTPException(status_code=401, detail="Not connected to HubRise")
 
 def get_access_token(conn: dict = Depends(get_hubrise_conn)) -> str: 
     token = conn.get("access_token")

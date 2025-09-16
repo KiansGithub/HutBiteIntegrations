@@ -1,8 +1,8 @@
-from fastapi import FastAPI, Requesst 
+from fastapi import FastAPI, Request 
 from fastapi.responses import JSONResponse 
 import httpx 
 
-def install_error_handles(app: FastAPI) -> None: 
+def install_error_handlers(app: FastAPI) -> None: 
     @app.exception_handler(httpx.HTTPStatusError)
     async def httpx_status_error_handler(request: Request, exc: httpx.HTTPStatusError): 
         try: 

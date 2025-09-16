@@ -1,12 +1,12 @@
-# app/schemas/orders.py
 from __future__ import annotations
 from typing import Optional, List, Dict, Union, Literal, Any
-from decimal import Decimal
-from pydantic import BaseModel, root_validator
+from pydantic import BaseModel, model_validator, ConfigDict
 from enum import Enum
 
+# HubRise expects money fields as string like "8.50 GBP"
 Money = str
-DecimalLike = Union[str, Decimal, int, float]
+# Quantities can be numeric or string, we’ll normalise before sending
+DecimalLike = Union[str, int, float]
 
 class OrderStatus(str, Enum):
     new = "new"
@@ -28,9 +28,10 @@ class ServiceType(str, Enum):
 
 # ----- Base -----
 class HubBase(BaseModel):
-    class Config:
-        extra = "allow"
-        anystr_strip_whitespace = True
+    model_config = ConfigDict(
+        extra="allow",
+        str_strip_whitespace=True,
+    )
 
 # ----- Customer -----
 class Customer(HubBase):
@@ -67,7 +68,7 @@ class DealLine(HubBase):
     deal_key: str
     label: Optional[str] = None
     pricing_effect: Optional[Literal["unchanged", "fixed_price", "price_off", "percentage_off"]] = None
-    pricing_value: Optional[Union[Money, DecimalLike, None]] = None
+    pricing_value: Optional[Money] = None
 
 class OrderItem(HubBase):
     private_ref: Optional[str] = None
@@ -75,7 +76,7 @@ class OrderItem(HubBase):
     sku_name: Optional[str] = None
     sku_ref: Optional[str] = None
     price: Money
-    quantity: DecimalLike
+    quantity: Union[str, DecimalLike]
     subtotal: Optional[Money] = None
     tax_rate: Optional[DecimalLike] = None
     subset: Optional[str] = None
@@ -148,16 +149,16 @@ class OrderCreate(HubBase):
     loyalty_operations: Optional[List[OrderLoyaltyOperation]] = None
     custom_fields: Optional[Dict[str, Any]] = None
 
-    @root_validator
-    def _customer_identity_rule(cls, values):
-        has_id = bool(values.get("customer_id"))
-        has_list_pair = bool(values.get("customer_list_id") and values.get("customer_private_ref"))
-        has_guest = bool(values.get("customer"))
+    @model_validator(mode='after')
+    def _customer_identity_rule(self) -> 'OrderCreate':
+        has_id = bool(self.customer_id)
+        has_list_pair = bool(self.customer_list_id and self.customer_private_ref)
+        has_guest = bool(self.customer)
         if sum([has_id, has_list_pair, has_guest]) > 1:
             raise ValueError(
                 "Provide only one of: customer_id, (customer_list_id + customer_private_ref), or customer."
             )
-        return values
+        return self
 
 class OrderPatch(HubBase):
     status: Optional[OrderStatus] = None
@@ -167,13 +168,13 @@ class OrderPatch(HubBase):
     private_ref: Optional[str] = None
     custom_fields: Optional[Dict[str, Any]] = None
 
-    # element mutations (e.g., {"id": "...", "deleted": true})
+    # element mutations
     items: Optional[List[Dict[str, Any]]] = None
     discounts: Optional[List[Dict[str, Any]]] = None
     charges: Optional[List[Dict[str, Any]]] = None
     payments: Optional[List[Dict[str, Any]]] = None
 
-# ----- Minimal response model (optional) -----
+# ----- Minimal response (optional) -----
 class OrderOut(HubBase):
     id: Optional[str] = None
     location_id: Optional[str] = None

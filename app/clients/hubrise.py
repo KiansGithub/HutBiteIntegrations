@@ -14,15 +14,21 @@ class HubRiseClient:
     async def request(self, method: str, path: str, **kwargs) -> httpx.Response: 
         url = f"{self._base}{path}"
         async with httpx.AsyncClient(timeout=20) as c: 
-            resp = await c.request(method, url, headers=self._headers(kwargs.pop("headers", None)))
+            resp = await c.request(method, url, headers=self.headers(kwargs.pop("headers", None)), **kwargs)
         # Raise for non-2xx; our exception handler will shape the response 
         resp.raise_for_status()
         return resp 
 
     # --- Orders: 
-    async def create_order(self, location_id: str, order: Dict[str, Any]) => Dict[str, Any]:
+    async def create_order(self, location_id: str, body: Dict[str, Any]) -> Dict[str, Any]:
+        path = f"/locations/{location_id}/orders"
+        resp = await self.request("POST", path, json=body)
+        return resp.json()
+    
+    # retrieve order 
+    async def retrieve_order(self, location_id: str, order_id: str) -> Dict[str, Any]:
         path = f"/locations/{location_id}/orders/{order_id}"
-        resp = await self._request("GET", path)
+        resp = await self.request("GET", path)
         return resp.json()
     
     async def list_orders(
@@ -38,10 +44,50 @@ class HubRiseClient:
         else:
             raise ValueError("location_id or account_id required")
 
-        resp = await self._request("GET", path, params=params)
+        resp = await self.request("GET", path, params=params)
         return resp.json()
 
     async def update_order(self, location_id: str, order_id: str, patch: Dict[str, Any]) -> Dict[str, Any]:
         path = f"/locations/{location_id}/orders/{order_id}"
-        resp = await self._request("PATCH", path, json=patch)
+        resp = await self.request("PATCH", path, json=patch)
         return resp.json()
+    
+    # --- Delivery Quotes 
+    async def create_delivery_quote(self, location_id: str, order_id: str, body: Dict[str, Any]) -> Dict[str, Any]:
+        path = f"/locations/{location_id}/orders/{order_id}/delivery_quotes"
+        resp = await self.request("POST", path, json=body)
+        return resp.json()
+    
+    async def accept_delivery_quote(self, location_id: str, order_id: str, quote_id: str) -> Dict[str, Any]:
+        path = f"/locations/{location_id}/orders/{order_id}/delivery_quotes/{quote_id}/accept"
+        resp = await self.request("POST", path)
+        return resp.json()
+    
+    # --- Deliveries 
+    async def create_delivery(self, location_id: str, order_id: str, body: Dict[str, Any]) -> Dict[str, Any]:
+        path = f"/locations/{location_id}/orders/{order_id}/delivery"
+        resp = await self.request("POST", path, json=body)
+        return resp.json()
+
+    async def retrieve_delivery(self, location_id: str, order_id: str) -> Dict[str, Any]:
+        path = f"/locations/{location_id}/orders/{order_id}/delivery"
+        resp = await self.request("GET", path)
+        return resp.json()
+
+    async def update_delivery(self, location_id: str, order_id: str, body: Dict[str, Any]) -> Dict[str, Any]:
+        path = f"/locations/{location_id}/orders/{order_id}/delivery"
+        resp = await self.request("PATCH", path, json=body)
+        return resp.json()
+    
+    async def get_catalog(self, catalog_id: str) -> Dict[str, Any]:
+        path = f"/catalogs/{catalog_id}"
+        resp = await self.request("GET", path)
+        return resp.json()
+    
+    # --- Locations (for opening hours, etc.) ---
+    async def get_location(self, location_id: str) -> Dict[str, Any]:
+        path = f"/locations/{location_id}"
+        resp = await self.request("GET", path)
+        return resp.json()
+    
+

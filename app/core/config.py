@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings
 from pydantic import AnyHttpUrl
 from typing import Optional
 import os
+from pathlib import Path
 
 class Settings(BaseSettings):
     APP_BASE_URL: AnyHttpUrl = "http://localhost:8000"
@@ -15,9 +16,13 @@ class Settings(BaseSettings):
     HUBRISE_SCOPE: str = "profile,location[orders.write,catalog.read]"
 
     # Optional: default fallbacks if not carried in session
-    DEFAULT_LOCATION_ID: Optional[str] = None  # e.g. "159yd-0"
+    HUBRISE_ACCESS_TOKEN: Optional[str] = None 
+    HUBRISE_ACCOUNT_ID: Optional[str] = None 
+    HUBRISE_LOCATION_ID: Optional[str] = None 
+    HUBRISE_CATALOG_ID: Optional[str] = None 
 
     class Config:
-        env_file = ".env"
+        env_file = Path(__file__).parent.parent / ".env"
+        extra = 'ignore'
 
 settings = Settings()
