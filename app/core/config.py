@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     HUBRISE_LOCATION_ID: Optional[str] = None 
     HUBRISE_CATALOG_ID: Optional[str] = None 
 
+    # Postcodes.io API configuration
+    POSTCODES_BASE_URL: str = "https://api.postcodes.io"
+    POSTCODE_TTL_SECONDS: int = 86400  # 24 hours cache
+    HTTP_TIMEOUT_SECONDS: int = 6
+
     class Config:
         env_file = Path(__file__).parent.parent / ".env"
         extra = 'ignore'
