@@ -26,6 +26,12 @@ class Settings(BaseSettings):
     POSTCODE_TTL_SECONDS: int = 86400  # 24 hours cache
     HTTP_TIMEOUT_SECONDS: int = 6
 
+    # Twilio SMS configuration 
+    TWILIO_ACCOUNT_SID: str 
+    TWILIO_AUTH_TOKEN: str 
+    TWILIO_PHONE_NUMBER: str 
+    SMS_ENABLED: bool = True 
+
     class Config:
         env_file = Path(__file__).parent.parent / ".env"
         extra = 'ignore'

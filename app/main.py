@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware
 from app.core.config import settings
 from app.core.errors import install_error_handlers
-from app.routers import auth, orders, catalog, deliverability
+from app.routers import auth, orders, catalog, deliverability, sms
 
 def create_app() -> FastAPI:
     app = FastAPI(title="HubRise Orders Proxy")
@@ -14,6 +14,7 @@ def create_app() -> FastAPI:
     app.include_router(orders.router)
     app.include_router(catalog.router)
     app.include_router(deliverability.router)
+    app.include_router(sms.router)
 
     return app
 
