@@ -12,6 +12,7 @@ venv/
 env/
 ENV/
 *.envrc
+.env
 
 # ---- Dependency / build artifacts ----
 *.egg

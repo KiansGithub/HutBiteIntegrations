@@ -18,7 +18,7 @@ class SMSResponse(BaseModel):
     status: SMSStatus 
     message: str 
     sid: Optional[str] = None 
-    error_code: Optional[str] = None 
+    error_code: Optional[Union[int, str]] = None 
 
 class SMSTestRequest(BaseModel):
     phone_number: str = Field(..., description="Phone number to send test SMS")
