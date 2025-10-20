@@ -1,7 +1,6 @@
 from pydantic_settings import BaseSettings
 from pydantic import AnyHttpUrl
 from typing import Optional
-import os
 from pathlib import Path
 
 class Settings(BaseSettings):
@@ -11,29 +10,28 @@ class Settings(BaseSettings):
     HUBRISE_OAUTH_URL: AnyHttpUrl = "https://manager.hubrise.com/oauth2/v1"
     HUBRISE_API_URL: AnyHttpUrl = "https://api.hubrise.com/v1"
 
-    HUBRISE_CLIENT_ID: str
-    HUBRISE_CLIENT_SECRET: str
+    # Make these optional with defaults, not required
+    HUBRISE_CLIENT_ID: Optional[str] = None
+    HUBRISE_CLIENT_SECRET: Optional[str] = None
     HUBRISE_SCOPE: str = "profile,location[orders.write,catalog.read]"
 
-    # Optional: default fallbacks if not carried in session
-    HUBRISE_ACCESS_TOKEN: Optional[str] = None 
-    HUBRISE_ACCOUNT_ID: Optional[str] = None 
-    HUBRISE_LOCATION_ID: Optional[str] = None 
-    HUBRISE_CATALOG_ID: Optional[str] = None 
+    HUBRISE_ACCESS_TOKEN: Optional[str] = None
+    HUBRISE_ACCOUNT_ID: Optional[str] = None
+    HUBRISE_LOCATION_ID: Optional[str] = None
+    HUBRISE_CATALOG_ID: Optional[str] = None
 
-    # Postcodes.io API configuration
     POSTCODES_BASE_URL: str = "https://api.postcodes.io"
-    POSTCODE_TTL_SECONDS: int = 86400  # 24 hours cache
+    POSTCODE_TTL_SECONDS: int = 86400
     HTTP_TIMEOUT_SECONDS: int = 6
 
-    # Twilio SMS configuration 
-    TWILIO_ACCOUNT_SID: str 
-    TWILIO_AUTH_TOKEN: str 
-    TWILIO_PHONE_NUMBER: str 
-    SMS_ENABLED: bool = True 
+    SMS_ENABLED: bool = False
+    CLICKSEND_USERNAME: Optional[str] = None
+    CLICKSEND_API_KEY: Optional[str] = None
+    SMS_SENDER: Optional[str] = None
 
     class Config:
-        env_file = Path(__file__).parent.parent / ".env"
-        extra = 'ignore'
+        # point to your chosen .env location; root is typical:
+        env_file = Path(__file__).resolve().parents[2] / ".env"
+        extra = "ignore"
 
 settings = Settings()

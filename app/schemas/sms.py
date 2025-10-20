@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field 
-from typing import Optional 
+from typing import Optional, Union 
 from enum import Enum 
 
 class SMSStatus(str, Enum):

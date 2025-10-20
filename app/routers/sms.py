@@ -70,6 +70,6 @@ async def get_sms_status():
     Check SMS service status
     """
     return {
-        "sms_enabled": sms_service.client is not None, 
-        "service_status": "active" if sms_service.client else "disabled"
+        "sms_enabled": sms_service.enabled,
+        "service_status": "active" if sms_service.enabled else "disabled"
     }
