@@ -71,7 +71,7 @@ class SMSService:
         }
 
         try:
-            resp = requests.post(
+            resp = httpx.post(
                 CLICKSEND_URL,
                 headers={
                     "Content-Type": "application/json",
