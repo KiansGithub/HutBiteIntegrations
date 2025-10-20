@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Optional
 
-import requests
+import httpx
 
 from app.core.config import settings
 from app.schemas.sms import SMSResponse, SMSStatus
