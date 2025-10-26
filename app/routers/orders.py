@@ -7,7 +7,7 @@ import httpx
 from fastapi import HTTPException
 import logging
 
-from app.core.deps import get_access_token, get_location_id, get_hubrise_conn
+from app.core.deps import get_access_token, get_location_id, get_http_client
 from app.clients.hubrise import HubRiseClient
 from app.schemas.orders import OrderCreate, OrderPatch
 
@@ -15,8 +15,11 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
-def client(token: str = Depends(get_access_token)) -> HubRiseClient:
-    return HubRiseClient(access_token=token)
+def client(
+    token: str = Depends(get_access_token),
+    http: httpx.AsyncClient = Depends(get_http_client),
+    ) -> HubRiseClient:
+    return HubRiseClient(access_token=token, http=http)
 
 # --- helpers for HubRise formatting ---
 CURRENCY = "GBP"  # optionally derive from location via hr.get_location(...)

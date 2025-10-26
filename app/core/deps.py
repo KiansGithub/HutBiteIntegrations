@@ -1,4 +1,5 @@
 from fastapi import Depends, HTTPException, Request 
+import httpx
 from .config import settings 
 
 def get_hubrise_conn(request: Request) -> dict: 
@@ -32,3 +33,15 @@ def get_location_id(request: Request, conn: dict = Depends(get_hubrise_conn)) ->
     if not loc: 
         raise HTTPException(status_code=400, detail="No HubRise location_id available")
     return loc
+
+# ---- NEW: Shared HTTP Client 
+def get_http_client(request: Request) -> httpx.AsyncClient: 
+    """
+    Return the ONE shared httpx.AsyncClient created in app.main lifespan 
+    This enables connection pooling and avoids creating a client per request. 
+    """
+    client = getattr(request.app.state, "http_client", None)
+    if client is None: 
+        # If this ever triggers, the app didn't create the client in main.py lifespan 
+        raise HTTPException(status_code=500, detail="HTTP client not initialized")
+    return client
