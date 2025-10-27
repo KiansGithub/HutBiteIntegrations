@@ -3,11 +3,15 @@ from app.schemas.ultimago import StoreProfile
 from fastapi import HTTPException, status 
 from app.core.config import settings 
 import base64 
+import logging
+
+logger = logging.getLogger(__name__)
 
 ULTIMAGO_BASE_URL = "https://services.tgfpizza.com/ThirdPartyServices/StoreServices.svc/"
 
 class UltimagoService:
-    def __init__(self):
+    def __init__(self, http_client: httpx.AsyncClient):
+        self.client = http_client
         self.enabled = bool(
             settings.ULTIMAGO_USERNAME and 
             settings.ULTIMAGO_PASSWORD
@@ -29,17 +33,22 @@ class UltimagoService:
             )
         try:
 
-            async with httpx.AsyncClient(timeout=10) as client:
-                resp = await client.get(
-                    f"{ULTIMAGO_BASE_URL}GetStoreProfile/{store_id}",
+            resp = await self.client.get(
+                    f"{ULTIMAGO_BASE_URL}GetStoreProfile",
+                    params={
+                        "StoreID": store_id
+                    },
                     headers={
                         "Authorization": self.auth_header, 
-                        "Content-Type": "application/json",
+                        "Accept": "application/json",
                     },
                 )
             resp.raise_for_status()
 
+            logger.info(f"Store profile retrieved successfully for store ID: {store_id}")
+
             store_profile = StoreProfile(**resp.json())
+            logger.info(f"Store profile correctly transferred")
             return store_profile
         except Exception as e:
             raise HTTPException(

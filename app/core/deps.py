@@ -1,6 +1,7 @@
 from fastapi import Depends, HTTPException, Request 
 import httpx
 from .config import settings 
+from app.services.ultimago import UltimagoService 
 
 def get_hubrise_conn(request: Request) -> dict: 
     # 1) Session (if present)
@@ -45,3 +46,7 @@ def get_http_client(request: Request) -> httpx.AsyncClient:
         # If this ever triggers, the app didn't create the client in main.py lifespan 
         raise HTTPException(status_code=500, detail="HTTP client not initialized")
     return client
+
+# ---- Ultimago Service 
+def get_ultimago_service(client: httpx.AsyncClient = Depends(get_http_client)) -> UltimagoService:
+    return UltimagoService(http_client=client)
