@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query, HTTPException, status 
-from app.schemas.ultimago import StoreProfile 
-from app.services.ultimago import UltimagoService 
+from app.schemas.ultimago import StoreProfile, MenuSRV  
+from app.services.ultimago import UltimagoService
 from app.core.deps import get_ultimago_service
 
 router = APIRouter(prefix="/ultimago", tags=["ultimago"])
@@ -14,8 +14,7 @@ async def store_profile(
 
 @router.get("/menu-srv", response_model=MenuSRV)
 async def menu_srv(
-    store_url: str = Query(..., description="Ultimago Store URL"), 
     store_id: str = Query(..., description="Ultimago Store ID"), 
     svc: UltimagoService = Depends(get_ultimago_service)
 ):
-    return await svc.get_menu_srv(store_url, store_id)
+    return await svc.get_menu_srv(store_id)

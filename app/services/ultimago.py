@@ -1,5 +1,5 @@
 import httpx 
-from app.schemas.ultimago import StoreProfile 
+from app.schemas.ultimago import StoreProfile, MenuSRV
 from fastapi import HTTPException, status 
 from app.core.config import settings 
 import base64 
