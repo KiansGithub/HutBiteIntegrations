@@ -14,7 +14,7 @@ async def sections():
     try: 
         response = sections_service.get_sections
 
-        if response.status = error:
+        if response.status == error:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to retrieve sections"
