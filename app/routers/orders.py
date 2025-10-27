@@ -145,7 +145,6 @@ async def list_orders(
     before: Optional[str] = Query(None, description="ISO8601 exclusive upper bound"),
     customer_id: Optional[str] = None,
     location_id: str = Depends(get_location_id),
-    conn: dict = Depends(get_hubrise_conn),
     hr: HubRiseClient = Depends(client),
 ):
     params = {k: v for k, v in {
@@ -160,7 +159,6 @@ async def list_orders(
     if location_scope:
         return await hr.list_orders(location_id=location_id, params=params)
     else:
-        account_id = conn.get("account_id")
         return await hr.list_orders(account_id=account_id, params=params)
 
 @router.patch("/{order_id}")
