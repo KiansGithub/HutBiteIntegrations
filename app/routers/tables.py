@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/tables", tags=[Sections])
 
-@router.get(("/sections", response_model=SectionsResponse))
+@router.get("/sections", response_model=SectionsResponse)
 async def sections():
     """
     Returns sections for the restaurant
