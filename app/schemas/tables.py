@@ -1,4 +1,5 @@
 from pydantic import BaseModel 
+from typing import List
 
 class Table(BaseModel):
     id: str 
@@ -7,4 +8,4 @@ class Table(BaseModel):
 class Section(BaseModel):
     id: str 
     name: str 
-    table: Table[]
+    table: List[Table]
