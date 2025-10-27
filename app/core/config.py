@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     CLICKSEND_API_KEY: Optional[str] = None
     SMS_SENDER: Optional[str] = None
 
+    ULTIMAGO_USERNAME: Optional[str] = None 
+    ULTIMAGO_PASSWORD: Optional[str] = None 
+
     class Config:
         # point to your chosen .env location; root is typical:
         env_file = Path(__file__).resolve().parents[2] / ".env"
