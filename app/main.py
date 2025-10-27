@@ -5,7 +5,7 @@ import httpx
 
 from app.core.config import settings
 from app.core.errors import install_error_handlers
-from app.routers import auth, orders, catalog, deliverability, sms
+from app.routers import auth, orders, catalog, deliverability, sms, tables
 
 @asynccontextmanager 
 async def lifespan(app: FastAPI):
@@ -48,6 +48,7 @@ def create_app() -> FastAPI:
     app.include_router(catalog.router)
     app.include_router(deliverability.router)
     app.include_router(sms.router)
+    app.include(tables.router)
 
     return app
 

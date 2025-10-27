@@ -102,17 +102,6 @@ def _normalise_order_for_hubrise(body: dict, currency: str = CURRENCY) -> dict:
     return b
 
 # --- endpoints ---
-
-@router.get("/example", response_model=None)
-async def example_location(conn: dict = Depends(get_hubrise_conn)) -> dict:
-    return {
-        "connected": True,
-        "account_id": conn.get("account_id"),
-        "location_id": conn.get("location_id"),
-        "catalog_id": conn.get("catalog_id"),
-        "client": conn.get("state"),
-    }
-
 @router.post("")
 async def create_order(
     payload: OrderCreate,
