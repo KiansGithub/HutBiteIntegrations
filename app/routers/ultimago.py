@@ -11,3 +11,11 @@ async def store_profile(
     svc: UltimagoService = Depends(get_ultimago_service)
 ):
     return await svc.get_store_profile(store_id)
+
+@router.get("/menu-srv", response_model=MenuSRV)
+async def menu_srv(
+    store_url: str = Query(..., description="Ultimago Store URL"), 
+    store_id: str = Query(..., description="Ultimago Store ID"), 
+    svc: UltimagoService = Depends(get_ultimago_service)
+):
+    return await svc.get_menu_srv(store_url, store_id)

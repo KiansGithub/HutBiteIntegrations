@@ -55,3 +55,34 @@ class UltimagoService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
                 detail="Failed to retrieve store profile"
             )
+
+        
+    async def get_menu_srv(self, store_id: str) -> MenuSRV:
+        if not self.enabled:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Ultima credentials not configured"
+            )
+        
+        try:
+            resp = await self.client.get(
+                f"{ULTIMAGO_BASE_URL}GetWebServicesEndpoint", 
+                params={
+                    "StoreID": store_id
+                },
+                headers={
+                    "Authorization": self.auth_header, 
+                    "Accept": "application/json"
+                }
+            )
+            resp.raise_for_status()
+
+            logger.info(f"Menu_SRV retrieved successfully for store ID: {store_id}")
+            menu_srv = MenuSRV(**resp.json())
+            return menu_srv 
+
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to retrieve Menu_SRV"
+            )
