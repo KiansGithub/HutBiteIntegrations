@@ -1,4 +1,4 @@
-from fastapi import Router, HTTPException, Status 
+from fastapi import APIRouter, HTTPException, Status 
 from app.schemas.tables import SectionsResponse
 from app.services.tables import sections_service 
 import logging 
