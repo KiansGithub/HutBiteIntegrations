@@ -50,6 +50,7 @@ def create_app() -> FastAPI:
     app.include_router(sms.router)
     # app.include(tables.router)
     app.include_router(ultimago.router)
+    app.include_router(tables.router)
 
     return app
 

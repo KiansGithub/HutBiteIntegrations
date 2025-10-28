@@ -8,4 +8,11 @@ class Table(BaseModel):
 class Section(BaseModel):
     id: str 
     name: str 
-    table: List[Table]
+    tables: List[Table]
+
+class UltimagoTableResponse(BaseModel):
+    DataObject: None 
+    DeMsgBody: None 
+    DeMsgType: int 
+    WinPizzaObject: List[Section]
+    
