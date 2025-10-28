@@ -8,7 +8,7 @@ class Table(BaseModel):
 
 class Section(BaseModel):
     id: int 
-    name: str = Field(alias="Name")
+    name: str
     tables: List[Table]
 
 class UltimagoTableResponse(BaseModel):
