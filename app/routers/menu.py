@@ -1,12 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status 
-from app.services.menu_service import MenuService 
+from fastapi import APIRouter, Depends, HTTPException, status, Query 
+from app.services.menu import MenuService 
 from app.core.deps import get_menu_service 
-from app.schemas.menu import Categories
-from typing import List
+from app.schemas.menu import MenuData
 
 router = APIRouter(prefix="/menu", tags=["menu"])
 
-@router.get("/items", response_model=List[Categories])
+@router.get("/items", response_model=MenuData)
 async def get_menu_items(
     store_id: str = Query(..., description="Store ID"),
     svc: MenuService = Depends(get_menu_service)

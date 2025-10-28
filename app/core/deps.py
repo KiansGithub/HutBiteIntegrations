@@ -3,6 +3,7 @@ import httpx
 from .config import settings 
 from app.services.ultimago import UltimagoService 
 from app.services.tables import TableService
+from app.services.menu import MenuService
 
 def get_hubrise_conn(request: Request) -> dict: 
     # 1) Session (if present)
@@ -54,3 +55,6 @@ def get_ultimago_service(client: httpx.AsyncClient = Depends(get_http_client)) -
 
 def get_tables_service(client: httpx.AsyncClient = Depends(get_http_client)) -> TableService:
     return TableService(http_client=client) 
+
+def get_menu_service(client: httpx.AsyncClient = Depends(get_http_client)) -> MenuService:
+    return MenuService(http_client=client)
