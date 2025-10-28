@@ -1,13 +1,14 @@
 from pydantic import BaseModel 
 from typing import List
+from pydantic import Field 
 
 class Table(BaseModel):
-    id: str 
-    name: str 
+    id: int
+    name: str = Field(alias="Name")
 
 class Section(BaseModel):
-    id: str 
-    name: str 
+    id: int 
+    name: str = Field(alias="Name")
     tables: List[Table]
 
 class UltimagoTableResponse(BaseModel):
