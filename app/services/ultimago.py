@@ -86,3 +86,34 @@ class UltimagoService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to retrieve Menu_SRV"
             )
+        
+    async def get_table_bill(self, menu_srv: str, section_name: str, table_name: str) -> TableBill: 
+        if not self.enabled(
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
+                detail="Ultima credentials not configured"
+            )
+
+        try:
+            resp = await self.client.get(
+                menu_srv, 
+                params={
+                    "sectionName": section_name, 
+                    "tableName": table_name 
+                },
+                headers={
+                    "Authorization": self.auth_header, 
+                    "Accept": "application/json"
+                }
+            )
+            resp.raise_for_status()
+
+            logger.info(f"Table bill retrieved successfully for section: {section_name} and table: {table_name}")
+            table_bill = TableBill(**resp.json())
+            return table_bill 
+
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to retrieve table bill"
+            )
