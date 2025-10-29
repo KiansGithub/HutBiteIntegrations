@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query, HTTPException, status 
-from app.schemas.ultimago import StoreProfile, MenuSRV, TableBill
+from app.schemas.ultimago import StoreProfile, MenuSRV, TableBill, TableBillResponse
 from app.services.ultimago import UltimagoService
 from app.core.deps import get_ultimago_service
 
@@ -27,3 +27,11 @@ async def table_bill(
     svc: UltimagoService = Depends(get_ultimago_service)
 ):
     return await svc.get_table_bill(menu_srv, section_name, table_name)
+
+@router.post("/settle-table-bill", response_model=TableBillResponse)
+async def settle_table_bill(
+    menu_srv: str = Query(..., description="Ultimago menusrv"), 
+    order_id: int = Query(..., description="Order ID"), 
+    svc: UltimagoService = Depends(get_ultimago_service)
+):
+    return await svc.settle_table_bill(menu_srv, order_id)

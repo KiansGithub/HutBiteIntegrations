@@ -1,5 +1,5 @@
 import httpx 
-from app.schemas.ultimago import StoreProfile, MenuSRV, TableBill
+from app.schemas.ultimago import StoreProfile, MenuSRV, TableBill, TableBillResponse
 from fastapi import HTTPException, status 
 from app.core.config import settings 
 import base64 
@@ -119,4 +119,35 @@ class UltimagoService:
         #     raise HTTPException(
         #         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         #         detail="Failed to retrieve table bill"
+        #     )
+
+    async def settle_table_bill(self, menu_srv: str, order_id: int) -> TableBillResponse:
+        return TableBillResponse(table_closed_success=True)
+        # if not self.enabled:
+        #     raise HTTPException(
+        #         status_code=500, 
+        #         detail="Ultima credentials not configured"
+        #     )
+
+        # try:
+        #     resp = await self.client.post(
+        #         menu_srv, 
+        #         params={
+        #             "orderID": order_id
+        #         },
+        #         headers={
+        #             "Authorization": self.auth_header, 
+        #             "Accept": "application/json"
+        #         }
+        #     )
+        #     resp.raise_for_status
+
+        #     logger.info(f"Table bill settled successfully for order with orderID: {order_id}")
+        #     table_bill_response = TableBillResponse(**resp.json())
+        #     return table_bill_response 
+
+        # except Exception as e:
+        #     raise HTTPException(
+        #         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+        #         detail="Failed to settle table bill"
         #     )

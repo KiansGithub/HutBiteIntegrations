@@ -17,3 +17,6 @@ class TableBill(BaseModel):
     order_id: int 
     items: List[Item] 
     total_amount: float
+
+class TableBillResponse(BaseModel):
+    table_closed_success: bool
