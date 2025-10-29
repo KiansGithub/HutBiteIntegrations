@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query, HTTPException, status 
-from app.schemas.ultimago import StoreProfile, MenuSRV  
+from app.schemas.ultimago import StoreProfile, MenuSRV, TableBill
 from app.services.ultimago import UltimagoService
 from app.core.deps import get_ultimago_service
 
@@ -18,3 +18,12 @@ async def menu_srv(
     svc: UltimagoService = Depends(get_ultimago_service)
 ):
     return await svc.get_menu_srv(store_id)
+
+@router.get("/table-bill", response_model=TableBill)
+async def table_bill(
+    menu_srv: str = Query(..., description="Ultimago Menu_Srv"), 
+    section_name: str = Query(..., description="Ultimago section name"), 
+    table_name: str = Query(..., description="Ultimago table name"), 
+    svc: UltimagoService = Depends(get_ultimago_service)
+):
+    return await svc.get_table_bill(menu_srv, section_name, table_name)

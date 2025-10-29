@@ -1,4 +1,5 @@
 from pydantic import BaseModel 
+from typing import List 
 
 class StoreProfile(BaseModel):
     StoreURL: str
@@ -7,12 +8,12 @@ class StoreProfile(BaseModel):
 class MenuSRV(BaseModel):
     MenuSRV: str 
 
-class TableBill(BaseModel):
-    order_id: int 
-    items: List[Item] 
-    total_amount: float
-
 class Item(BaseModel):
     name: str 
     quantity: int 
     price: float 
+
+class TableBill(BaseModel):
+    order_id: int 
+    items: List[Item] 
+    total_amount: float
