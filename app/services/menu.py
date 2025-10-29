@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status 
 from app.data.menus import MENU_ELCURIOSO
+import httpx
 
 class MenuService:
 
