@@ -4,6 +4,7 @@ from .config import settings
 from app.services.ultimago import UltimagoService 
 from app.services.tables import TableService
 from app.services.menu import MenuService
+from app.services.address import AddressService
 
 def get_hubrise_conn(request: Request) -> dict: 
     # 1) Session (if present)
