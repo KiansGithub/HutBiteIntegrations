@@ -30,26 +30,26 @@ class AddressService:
             formatted=f"{text}, {postal} {city}, DE".strip(", "),
         )
 
-        async def suggest(self, *, query: str, country: str = "DE", limit: int = 20):
-            if not self.enabled:
-                raise HTTPException(
-                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                    detail="Addressy API key not configured"
-                )
-            try:
-                resp = await self.client.get(
-                    ADDRESSY_URL, 
-                    params={"Key": self.key, "Text": query, "Countries": country, "Limit": str(limit) },
-                    headers={"Accept": "application/json"}, 
-                    timeout=5.0
-                )
-                resp.raise_for_status()
-                data = resp.json() or {}
-            except Exception as e:
-                raise HTTPException(
-                    status_code=502, 
-                    detail="Address provider error"
-                )
+    async def suggest(self, *, query: str, country: str = "DE", limit: int = 20):
+        if not self.enabled:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Addressy API key not configured"
+            )
+        try:
+            resp = await self.client.get(                    ADDRESSY_URL, 
+                params={"Key": self.key, "Text": query, "Countries": country, "Limit": str(limit) },
+                headers={"Accept": "application/json"}, 
+                timeout=5.0
+            )
+            resp.raise_for_status()                
+            data = resp.json() or {}
+            
+        except Exception as e:
+            raise HTTPException(
+                status_code=502, 
+                detail="Address provider error"
+                            )
 
-            items = data.get("Items") or []
-            return [m for it in items if (m := self._map_item(it))]
+        items = data.get("Items") or []
+        return [m for it in items if (m := self._map_item(it))]

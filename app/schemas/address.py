@@ -1,7 +1,7 @@
 from pydantic import BaseModel, constr
 
 
-class AddressSuggestions(BaseModel):
+class AddressSuggestion(BaseModel):
     id: str 
     label: str 
     description: str | None = None 
