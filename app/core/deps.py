@@ -58,3 +58,6 @@ def get_tables_service(client: httpx.AsyncClient = Depends(get_http_client)) -> 
 
 def get_menu_service(client: httpx.AsyncClient = Depends(get_http_client)) -> MenuService:
     return MenuService(http_client=client)
+
+def get_address_service(client: httpx.AsyncClient = Depends(get_http_client)) -> AddressService:
+    return AddressService(http_client=client)
